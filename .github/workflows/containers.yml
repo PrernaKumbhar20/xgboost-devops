@@ -20,6 +20,7 @@ jobs:
       - shell: bash
         run: |
           echo "Container job approved to run"
+
   build-containers:
     name: Build CI containers (${{ matrix.image_repo }})
     runs-on:
@@ -57,13 +58,27 @@ jobs:
             runner: linux-arm64-cpu
           - image_repo: xgb-ci.gpu_cuda12_aarch64
             runner: linux-arm64-cpu
-          - image_repo: xgb-ci.manylinux_2_34_ppc64le
-            runner: self-hosted    # ← your self-hosted runner label
     steps:
-      # Restart Docker daemon so that it recognizes the ephemeral disks
       - run: sudo systemctl restart docker
       - uses: actions/checkout@v7
         with:
           submodules: "true"
       - name: Build ${{ matrix.image_repo }}
         run: bash containers/docker_build.sh ${{ matrix.image_repo }}
+
+  # ↓↓↓ ADD THIS NEW JOB ↓↓↓
+  build-ppc64le:
+    name: Build CI container (xgb-ci.manylinux_2_34_ppc64le)
+    runs-on: [self-hosted, linux, ppc64le]
+    needs: display-message
+    env:
+      PUBLISH_CONTAINER: "0"
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          submodules: "true"
+      - name: Build xgb-ci.manylinux_2_34_ppc64le
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
+          GITHUB_SHA: ${{ github.sha }}
+        run: bash containers/docker_build.sh xgb-ci.manylinux_2_34_ppc64le
