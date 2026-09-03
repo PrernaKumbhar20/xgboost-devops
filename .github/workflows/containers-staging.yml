@@ -2,6 +2,9 @@ name: Build containers (staging)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - xgboost-devops-ci-image
   pull_request:
     paths:
       - 'containers/**'
@@ -17,4 +20,3 @@ jobs:
     uses: ./.github/workflows/containers.yml
     with:
       environment-name: containers-staging
-
