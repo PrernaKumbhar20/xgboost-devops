@@ -111,3 +111,6 @@ xgb-ci.jvm_gpu_build:
 
 xgb-ci.i386:
   container_def: i386
+
+xgb-ci.manylinux_2_34_ppc64le:
+  container_def: manylinux_2_34_ppc64le
