@@ -4,6 +4,7 @@ Wrapper script to build a Docker container
 
 import argparse
 import itertools
+import os
 import pathlib
 import subprocess
 import sys
@@ -64,11 +65,12 @@ def docker_build(
     # See https://docs.docker.com/build/builders/drivers/
     docker_build_cli_args.append("--load")
     # Remaining CLI args
+    docker_build_cli_args.append("--progress=plain")
+    # --ulimit is blocked in LXD-restricted environments (e.g. ppc64le self-hosted runner)
+    if os.environ.get("SKIP_ULIMIT") != "1":
+        docker_build_cli_args.extend(["--ulimit", "nofile=1024000:1024000"])
     docker_build_cli_args.extend(
         [
-            "--progress=plain",
-            "--ulimit",
-            "nofile=1024000:1024000",
             "-t",
             image_uri,
             "-f",
