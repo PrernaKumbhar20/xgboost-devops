@@ -57,6 +57,8 @@ jobs:
             runner: linux-arm64-cpu
           - image_repo: xgb-ci.gpu_cuda12_aarch64
             runner: linux-arm64-cpu
+          - image_repo: xgb-ci.manylinux_2_34_ppc64le
+            runner: self-hosted    # ← your self-hosted runner label
     steps:
       # Restart Docker daemon so that it recognizes the ephemeral disks
       - run: sudo systemctl restart docker

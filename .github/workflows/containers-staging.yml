@@ -1,6 +1,7 @@
 name: Build containers (staging)
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'containers/**'
